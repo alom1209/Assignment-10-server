@@ -20,6 +20,7 @@ async function run() {
     await client.connect();
     const dataBase=client.db('Home_Service')
     const homeServices=dataBase.collection('services')
+    const bookings=dataBase.collection('bookings')
     // get all services from the database
     app.get('/services',async(req,res)=>{
       const cursor=homeServices.find();
@@ -50,7 +51,7 @@ async function run() {
       const result=await cursor.toArray()
       res.send(result)
     })
-    // updating data
+    // updating service data
     app.patch('/services/:id',async(req,res)=>{
       const id=req.params.id;
       const updatedService=req.body;
@@ -64,7 +65,7 @@ async function run() {
       const result=await homeServices.updateOne(query,update,options)
       res.send(result)
     })
-    // deleting data
+    // deleting service data
     app.delete('/services/:id',async(req,res)=>{
       const id=req.params.id;
       const query={_id:new ObjectId(id),
@@ -72,6 +73,12 @@ async function run() {
       }
       const result=await homeServices.deleteOne(query)
       res.send(result)
+    })
+    // bookings collection
+    app.post('/bookings',async(req,res)=>{
+      const newBooking=req.body
+      const result=await bookings.insertOne(newBooking);
+      res.send(result);
     })
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
