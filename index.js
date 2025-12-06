@@ -26,7 +26,13 @@ async function run() {
       const result=await cursor.toArray();
       res.send(result) 
     })
-    
+    // for details
+    app.get('/services/:id',async (req,res)=>{
+      const id=req.params.id;
+      const query={_id:new ObjectId(id)}
+      const result=await homeServices.findOne(query);
+      res.send(result);
+    })
     // adding services to database
     app.post('/services',async(req,res)=>{
         const data=req.body;
