@@ -1,6 +1,6 @@
 const express=require("express")
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app=express()
 const cors=require("cors");
 const port=process.env.port||3000;
@@ -26,6 +26,19 @@ async function run() {
         const result=await homeServices.insertOne(data);
         res.send(result);
     })
+    // adding my service
+    app.get('/services',async (req,res)=>{
+      const email=req.query.email
+      const query={}
+      if(email){
+        query.providerEmail=email;
+      }
+      const cursor=homeServices.find(query)
+      const result=await cursor.toArray()
+      res.send(result)
+    })
+    // updating data
+  
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
