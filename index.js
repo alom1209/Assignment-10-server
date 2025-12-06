@@ -80,6 +80,19 @@ async function run() {
       const result=await bookings.insertOne(newBooking);
       res.send(result);
     })
+    // my bookings
+    app.get('/bookings',async(req,res)=>{
+      const email=req.query.email;
+      console.log(email)
+      const query={}
+      if(email){
+        query.userEmail=email
+      }
+      const cursor=bookings.find(query)
+      const result=await cursor.toArray()
+      res.send(result)
+    })
+    // 
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
