@@ -20,6 +20,13 @@ async function run() {
     await client.connect();
     const dataBase=client.db('Home_Service')
     const homeServices=dataBase.collection('services')
+    // get all services from the database
+    app.get('/services',async(req,res)=>{
+      const cursor=homeServices.find();
+      const result=await cursor.toArray();
+      res.send(result) 
+    })
+    
     // adding services to database
     app.post('/services',async(req,res)=>{
         const data=req.body;
@@ -49,6 +56,15 @@ async function run() {
       }
       const options={}
       const result=await homeServices.updateOne(query,update,options)
+      res.send(result)
+    })
+    // deleting data
+    app.delete('/services/:id',async(req,res)=>{
+      const id=req.params.id;
+      const query={_id:new ObjectId(id),
+        providerEmail: req.body.providerEmail
+      }
+      const result=await homeServices.deleteOne(query)
       res.send(result)
     })
     await client.db("admin").command({ ping: 1 });
